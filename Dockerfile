@@ -1,24 +1,21 @@
 FROM python:3.11-slim
 
-# 安裝必要的套件
+# 安裝 Chrome 及 Selenium 依賴
 RUN apt-get update && apt-get install -y \
-    chromium-driver \
-    chromium \
-    && rm -rf /var/lib/apt/lists/*
+    wget unzip curl gnupg libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 libxss1 libappindicator1 libindicator7 \
+    libasound2 libatk-bridge2.0-0 libgtk-3-0 xvfb && \
+    rm -rf /var/lib/apt/lists/*
 
-# 設定環境變數
-ENV PYTHONUNBUFFERED=1
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
+# 安裝 Chrome 瀏覽器
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y ./google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb
 
-# 建立工作目錄
-WORKDIR /app
-
-# 複製檔案
+# 安裝 pip 套件
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /app
+WORKDIR /app
 
-# 執行主程式
 CMD ["python", "main.py"]
