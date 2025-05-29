@@ -1,0 +1,17 @@
+app = "binance-copy-trade-monitor"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  TELEGRAM_TOKEN = "your_telegram_token"
+  TELEGRAM_CHAT_ID = "your_chat_id"
+  TRADER_UID = "4466349480575764737"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
